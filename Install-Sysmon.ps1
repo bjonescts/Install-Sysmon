@@ -2,18 +2,15 @@
 .SYNOPSIS
 Install-Sysmon downloads the Sysmon executables archive and installs Sysmon64.exe
 with a configuration file.
-.DESCRIPTION
-PowerShell script or module to install Sysmon with configuration 
-.PARAMETER path
-The path to the working directory.  Default is user Documents.
-.EXAMPLE
-Install-Sysmon -path C:\Users\example\Desktop
 #>
-#A few variables for you change
+
+#A few variables
 $ServiceName = 'Sysmon64'
 $sysmon64installed = Get-Service -Name $ServiceName
+$path=$env:TEMP # This will use the temporary folder for the user running it.
+#You may modify this URL to point to where you have your XML config.
 $sysmonconfigurl = 'https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml'
-$path=$env:TEMP
+
 
 #Test path and create it if required
 

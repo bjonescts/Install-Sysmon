@@ -9,9 +9,6 @@ The path to the working directory.  Default is user Documents.
 .EXAMPLE
 Install-Sysmon -path C:\Users\example\Desktop
 #>
-#Check for sysmon already installed
-$ServiceName = 'Sysmon64'
-$sysmon64installed = Get-Service -Name $ServiceName
 
 [CmdletBinding()]
 
@@ -19,6 +16,11 @@ $sysmon64installed = Get-Service -Name $ServiceName
 param (
     [string]$path=$env:TEMP   
 )
+
+#A few variables for you change
+$ServiceName = 'Sysmon64'
+$sysmon64installed = Get-Service -Name $ServiceName
+$sysmonconfigurl = 'https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml'
 
 #Test path and create it if required
 
@@ -29,29 +31,17 @@ if(!(test-path $path))
 	Write-Information -MessageData "...Complete" -InformationAction Continue
 }
 
+#Checking to see if the sysmon64 service is running.
+
 if ($sysmon64installed.Status -eq 'Running'){
     Set-Location $path
     Write-Host "Retrieving and Updating Configuration File..."
-    Invoke-WebRequest -Uri https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml -Outfile sysmonconfig-export.xml
+    Invoke-WebRequest -Uri $sysmonconfigurl -Outfile sysmonconfig-export.xml
     Start-Process -NoNewWindow -FilePath "$env:SystemRoot\sysmon64.exe" -ArgumentList "-c sysmonconfig-export.xml"
     Write-Host "Configuration updated!"
-    Exit 0}
+    Exit 0
+    }
 
-[CmdletBinding()]
-
-#Establish parameters for path
-param (
-    [string]$path=$env:TEMP   
-)
-
-#Test path and create it if required
-
-If(!(test-path $path))
-{
-	Write-Information -MessageData "Path does not exist.  Creating Path..." -InformationAction Continue;
-	New-Item -ItemType Directory -Force -Path $path | Out-Null;
-	Write-Information -MessageData "...Complete" -InformationAction Continue
-}
 
 Set-Location $path
 
@@ -80,7 +70,7 @@ Write-Host "Unzip Complete."
 
 Write-Host "Retrieving Configuration File..."
 
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml -Outfile sysmonconfig-export.xml
+Invoke-WebRequest -Uri $sysmonconfigurl -Outfile sysmonconfig-export.xml
 
 Write-Host "Configuration File Retrieved."
 

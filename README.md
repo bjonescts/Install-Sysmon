@@ -10,12 +10,4 @@ with a configuration file.
 
 PowerShell script or module to install Sysmon with configuration.
 
-No parameters are needed for this script to function normally or run from a RMM.
-
-.PARAMETER path
-
-The path to the working directory.  Default is user's temp folder.
-
-.EXAMPLE
-
-Install-Sysmon -path C:\Users\example\Desktop
+Modified original so that no parameters are needed and can be run from a RMM.

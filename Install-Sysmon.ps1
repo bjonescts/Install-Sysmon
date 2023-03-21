@@ -9,18 +9,11 @@ The path to the working directory.  Default is user Documents.
 .EXAMPLE
 Install-Sysmon -path C:\Users\example\Desktop
 #>
-
-[CmdletBinding()]
-
-#Establish parameters for path
-param (
-    [string]$path=$env:TEMP   
-)
-
 #A few variables for you change
 $ServiceName = 'Sysmon64'
 $sysmon64installed = Get-Service -Name $ServiceName
 $sysmonconfigurl = 'https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml'
+$path=$env:TEMP
 
 #Test path and create it if required
 
@@ -39,8 +32,7 @@ if ($sysmon64installed.Status -eq 'Running'){
     Invoke-WebRequest -Uri $sysmonconfigurl -Outfile sysmonconfig-export.xml
     Start-Process -NoNewWindow -FilePath "$env:SystemRoot\sysmon64.exe" -ArgumentList "-c sysmonconfig-export.xml"
     Write-Host "Configuration updated!"
-    Exit 0
-    }
+    Exit 0}
 
 
 Set-Location $path
